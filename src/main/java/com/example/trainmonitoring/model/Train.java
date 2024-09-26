@@ -1,7 +1,14 @@
 package com.example.trainmonitoring.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class Train {
-    private String id;
+
+    @Id
+    private String id;  // Уникальный идентификатор
+
     private String trainNumber;  // Номер электрички
     private String departureStation;  // Станция отправления
     private String arrivalStation;  // Станция прибытия
@@ -9,7 +16,7 @@ public class Train {
     private String arrivalTime;  // Время прибытия
     private String status;  // Статус электрички (например, "on time", "delayed")
 
-    // Конструктор по умолчанию (нужен для работы с JPA или других библиотек)
+    // Конструктор по умолчанию
     public Train() {
     }
 
