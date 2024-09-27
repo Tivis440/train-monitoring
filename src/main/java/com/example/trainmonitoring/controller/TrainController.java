@@ -1,6 +1,7 @@
 package com.example.trainmonitoring.controller;
 
 import com.example.trainmonitoring.model.Train;
+import com.example.trainmonitoring.model.Station; // Импортируйте класс Station
 import com.example.trainmonitoring.repository.TrainRepository;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -38,7 +39,25 @@ public class TrainController {
     // Получение электрички по id
     @GetMapping("/{id}")
     public EntityModel<Train> getTrainById(@PathVariable String id) {
-        Train train = trainRepository.findById(id).orElseThrow(() -> new RuntimeException("Train not found"));
+        Train train = trainRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Train not found"));
         return EntityModel.of(train, Link.of("/trains/" + id, "self"));
+    }
+
+    // Получение станций по id поезда
+    @GetMapping("/{id}/stations")
+    public CollectionModel<EntityModel<Station>> getStationsByTrainId(@PathVariable String id) {
+        Train train = trainRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Train not found"));
+
+        List<Station> stations = train.getStations(); // Получаем список станций поезда
+
+        // Преобразуем список станций в HATEOAS
+        List<EntityModel<Station>> stationModels = stations.stream()
+                .map(station -> EntityModel.of(station,
+                        Link.of("/trains/" + id + "/stations/" + station.getId(), "self")))
+                .collect(Collectors.toList());
+
+        return CollectionModel.of(stationModels, Link.of("/trains/" + id + "/stations", "self"));
     }
 }

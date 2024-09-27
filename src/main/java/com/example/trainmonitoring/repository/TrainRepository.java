@@ -4,5 +4,5 @@ import com.example.trainmonitoring.model.Train;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TrainRepository extends JpaRepository<Train, String> {
-    // Здесь можно добавить пользовательские запросы, если нужно
+
 }

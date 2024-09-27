@@ -1,7 +1,7 @@
 package com.example.trainmonitoring.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 public class Train {
@@ -16,13 +16,18 @@ public class Train {
     private String arrivalTime;  // Время прибытия
     private String status;  // Статус электрички (например, "on time", "delayed")
 
+    // Добавляем связь с таблицей Station
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "train_id")  // Связываем станции с поездом через внешний ключ train_id
+    private List<Station> stations;  // Список станций, через которые проходит поезд
+
     // Конструктор по умолчанию
     public Train() {
     }
 
     // Конструктор с параметрами
     public Train(String id, String trainNumber, String departureStation, String arrivalStation,
-                 String departureTime, String arrivalTime, String status) {
+                 String departureTime, String arrivalTime, String status, List<Station> stations) {
         this.id = id;
         this.trainNumber = trainNumber;
         this.departureStation = departureStation;
@@ -30,6 +35,7 @@ public class Train {
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
         this.status = status;
+        this.stations = stations;
     }
 
     // Геттеры и сеттеры
@@ -87,5 +93,13 @@ public class Train {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public List<Station> getStations() {
+        return stations;
+    }
+
+    public void setStations(List<Station> stations) {
+        this.stations = stations;
     }
 }
